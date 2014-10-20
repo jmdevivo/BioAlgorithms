@@ -4,6 +4,8 @@
 * Date: 10/18/14
 */
 
+import scala.collection.immutable.StringLike
+
 object PatternCount {
 	
 	def main(args: Array[String]):Unit = {
@@ -11,29 +13,17 @@ object PatternCount {
 		println(result)
 	}
 
-	def patCount(text: String, pattern: String): Int = {
+	def patCount(text: String, pattern: String):Int = {
 
-		def go(count: Int, index: Int):Int = {
-
-			if(pattern == text.substring(index, (index+pattern.length()))) {
-
-				if((1 + index) <= (text.length() - pattern.length())) {
-					go(count + 1, index + 1)
-				}
-				else count + 1
-
-			}
-
+		@annotation.tailrec
+		def go(s: String, count: Int):Int = {
+			if(s.length < pattern.length) count 
 			else {
-				if((1 + index) <= (text.length() - pattern.length())) {
-					go(count, index + 1)
-				}
-				else count
+				if(s.startsWith(pattern)) go(s.tail, count + 1) else go(s.tail, count)
 			}
-				
 		}
 
-		go(0, 0)
+		go(text, 0)
 	}
 
 }
